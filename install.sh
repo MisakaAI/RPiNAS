@@ -13,10 +13,8 @@ then
 fi
 
 ## 设置变量
-AriaNG_Version=1.0.0
+AriaNG_Version=1.1.3
 AriaNG_Download="https://github.com/mayswind/AriaNg/releases/download/$AriaNG_Version/AriaNg-$AriaNG_Version.zip"
-NextCloud_Version=15.0.2
-NextCloud_Download="https://download.nextcloud.com/server/releases/nextcloud-$NextCloud_Version.zip"
 
 env() {
     ## 系统更新
@@ -28,29 +26,6 @@ env() {
     systemctl restart ssh.service
     ## Nginx
     apt install -y nginx
-    ## Sqlite3
-    apt install -y sqlite3
-    ## PHP 7 
-    apt install -y php-fpm \
-    php-ctype \
-    php-dom \
-    php-gd \
-    php-iconv \
-    php-json \
-    php-mbstring \
-    php-posix \
-    php-simplexml \
-    php-xmlreader \
-    php-xmlwriter \
-    php-zip \
-    php-pdo-sqlite \
-    php-curl \
-    php-fileinfo \
-    php-bz2 \
-    php-intl \
-    php-mcrypt \
-    php-apcu \
-    php-imagick
     ## Python 3
     apt install -y python3 python3-pip
     # pip3 install uwsgi
@@ -104,16 +79,6 @@ nfs() {
     systemctl enable nfs-server.service
 }
 
-nextcloud() {
-    wget $NextCloud_Download
-    unzip nextcloud-$NextCloud_Version.zip -d /var/www/html
-    chown www-data:www-data -R /var/www/html/nextcloud
-    rm -rf nextcloud-$Nextcloud_Version.zip
-    cp /etc/nginx/sites-enabled/default /etc/nginx/sites-enabled/default.bak
-    cp ./default /etc/nginx/sites-enabled/default
-    systemctl restart nginx.service
-}
-
 install() {
     # Creating RPiNAS user
     username="rpinas"
@@ -121,8 +86,15 @@ install() {
     chmod 777 /$username
     env
     aria2
-    nextcloud
     nfs
+	cp ./update-hosts.sh /usr/bin/update-hosts
+	chmod +x /usr/bin/update-hosts
+	echo "0 0 * * * root /usr/bin/update-hosts" >> /etc/crontab
+	cp ./bt-tracke.sh /usr/bin/update-bt-track
+	chmod +x /usr/bin/update-bt-track
+	echo "0 0 * * * root /usr/bin/update-bt-track" >> /etc/crontab
+	update-hosts
+	update-bt-trackers
     exit 0
 }
 install
