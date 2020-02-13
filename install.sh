@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # Raspberry Pi NAS Install
-# Author : Selphia
 # Email : lolisound@gmail.com
-# Time : 1/22/2019
-# Version : 1.3
+# Time : 2020/02/13
+# Version : 2.0
 
 ### Detect if the user is root
 if [ "$UID" != "0" ]
@@ -13,8 +12,10 @@ then
 fi
 
 ## 设置变量
-AriaNG_Version=1.1.3
+AriaNG_Version=1.1.4
 AriaNG_Download="https://github.com/mayswind/AriaNg/releases/download/$AriaNG_Version/AriaNg-$AriaNG_Version.zip"
+nexycloud_Version=18.0.1
+nextcloud_Download="https://download.nextcloud.com/server/releases/nextcloud-$nexycloud_Version.zip"
 
 env() {
     ## 系统更新
@@ -79,6 +80,38 @@ nfs() {
     systemctl enable nfs-server.service
 }
 
+samba() {
+    #Samba
+    apt install -y samba
+    echo "
+[rpinas]
+    comment = Raspberry Pi Network Attached Storage
+    path = /rpinas
+    read only = no
+    writable = yes
+    create mask = 0777
+    directory mask = 0777
+    browseable = yes
+    public = yes
+    guest ok = yes" >> /etc/samba/smb.conf
+    systemctl restart smbd.service
+    systemctl enable smbd.service
+}
+nextcloud() {
+    # Download
+    wget $nextcloud_Download
+    unzip nextcloud-$nexycloud_Version.zip
+    # Installation dependency
+    apt install -y php-fpm php-common php-curl php-xml php-gd php-json php-mbstring php-zip php-sqlite3 php-bz2 php-intl php-smbclient php-gmp php-apcu php-imagick
+    apt install -y sqlite3
+    apt install -y ffmpeg
+    apt install -y libreoffice libreoffice-l10n-zh-cn
+    # Installation Nextcloud
+    cp -r nextcloud /var/www/html
+    chown -R www-data:www-data /var/www/html/nextcloud/
+    sudo -u www-data php /var/www/html/nextcloud/occ maintenance:update:htaccess
+}
+
 install() {
     # Creating RPiNAS user
     username="rpinas"
@@ -87,10 +120,12 @@ install() {
     env
     aria2
     nfs
+    samba
+    nextcloud
 	cp ./update-hosts.sh /usr/bin/update-hosts
 	chmod +x /usr/bin/update-hosts
 	echo "0 0 * * * root /usr/bin/update-hosts" >> /etc/crontab
-	cp ./bt-tracke.sh /usr/bin/update-bt-track
+	cp ./bt-track.sh /usr/bin/update-bt-track
 	chmod +x /usr/bin/update-bt-track
 	echo "0 0 * * * root /usr/bin/update-bt-track" >> /etc/crontab
 	update-hosts
