@@ -14,7 +14,7 @@ apt clean && apt update && apt upgrade -y && apt autoremove -y && apt autoclean
 # Pypi Sources
 apt install -y python3-pip
 pip3 install pip -U
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+pip3 config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 
 # Locale LANG 
 export LANG=zh_CN.UTF-8

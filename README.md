@@ -29,13 +29,14 @@ NTFS磁盘读写：NTFS-3G
 Web服务器：[Nginx](http://nginx.org/)
 下载：[Aria2](https://github.com/aria2/aria2)
 Aria2前端：[AriaNg](http://ariang.mayswind.net/)
-私有云：[NextCloud](https://nextcloud.com/)
 数据库：[SQLite](http://www.sqlite.org)
 
 ***可选***
+*私有云：[NextCloud](https://nextcloud.com/)*
 *媒体中心：[Kodi](https://kodi.tv/)*
 *版本控制：[Git](https://git-scm.com/)*
 *内网穿透：[Ngrok](https://ngrok.com/)*
+nextcloud 在树莓派上没安装成功过，很迷。
 Kodi的作用是树莓派可以直接连接电视，并播放下载好的视频。
 Git取决于想不想把代码放在自己家，我是觉得Gayhub挺好用的。
 移动等不给公网ip的宽带需要ngrok来实现内网穿透，有公网ip可以直接在路由器中设置DDNS和端口转发。

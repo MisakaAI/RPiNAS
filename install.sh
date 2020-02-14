@@ -102,8 +102,9 @@ nextcloud() {
     wget $nextcloud_Download
     unzip nextcloud-$nexycloud_Version.zip
     # Installation dependency
-    apt install -y php-fpm php-common php-curl php-xml php-gd php-json php-mbstring php-zip php-sqlite3 php-bz2 php-intl php-smbclient php-gmp php-apcu php-imagick
-    apt install -y sqlite3
+    apt install -y php-fpm php-common php-curl php-xml php-gd php-json php-mbstring php-zip php-pgsql php-bz2 php-intl php-smbclient php-gmp php-apcu php-imagick
+    apt install -y postgresql
+    pg_ctlcluster 11 main start
     apt install -y ffmpeg
     apt install -y libreoffice libreoffice-l10n-zh-cn
     # Installation Nextcloud
@@ -121,7 +122,7 @@ install() {
     aria2
     nfs
     samba
-    nextcloud
+    #nextcloud
 	cp ./update-hosts.sh /usr/bin/update-hosts
 	chmod +x /usr/bin/update-hosts
 	echo "0 0 * * * root /usr/bin/update-hosts" >> /etc/crontab
