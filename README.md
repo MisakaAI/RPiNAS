@@ -14,38 +14,38 @@
 * 硬盘
 * 硬盘盒/硬盘仓（尺寸应于硬盘一致、建议使用 Type-C 接口的硬盘盒）
 
-树莓派的USB接口通常电压较低，可能无法带动普通的移动硬盘，因此请使用带独立供电的硬盘盒。
+树莓派的USB接口通常电压较低，可能无法带动普通的移动硬盘，因此请使用带独立供电的硬盘盒。<br>
 树莓派4B升级成Type-c供电，也许可以直接用移动硬盘？
 
 ## 软件说明
 
 ### 使用的软件
 
-系统：[Raspbian](https://www.raspberrypi.org/downloads/raspbian/)
-语言：[PHP7](http://php.net/) and [Python3](https://www.python.org/)
-网络共享：NFS（Linux）/ Samba（Windows）
-远程控制：OpenSSH
-NTFS磁盘读写：NTFS-3G
-Web服务器：[Nginx](http://nginx.org/)
-下载：[Aria2](https://github.com/aria2/aria2)
-Aria2前端：[AriaNg](http://ariang.mayswind.net/)
+系统：[Raspbian](https://www.raspberrypi.org/downloads/raspbian/)<br>
+语言：[PHP7](http://php.net/) and [Python3](https://www.python.org/)<br>
+网络共享：NFS（Linux）/ Samba（Windows）<br>
+远程控制：OpenSSH<br>
+NTFS磁盘读写：NTFS-3G<br>
+Web服务器：[Nginx](http://nginx.org/)<br>
+下载：[Aria2](https://github.com/aria2/aria2)<br>
+Aria2前端：[AriaNg](http://ariang.mayswind.net/)<br>
 数据库：[SQLite](http://www.sqlite.org)
 
 ***可选***
-*私有云：[NextCloud](https://nextcloud.com/)*
-*媒体中心：[Kodi](https://kodi.tv/)*
-*版本控制：[Git](https://git-scm.com/)*
-*内网穿透：[Ngrok](https://ngrok.com/)*
-nextcloud 在树莓派上没安装成功过，很迷。
-Kodi的作用是树莓派可以直接连接电视，并播放下载好的视频。
-Git取决于想不想把代码放在自己家，我是觉得Gayhub挺好用的。
+*私有云：[NextCloud](https://nextcloud.com/)*<br>
+*媒体中心：[Kodi](https://kodi.tv/)*<br>
+*版本控制：[Git](https://git-scm.com/)*<br>
+*内网穿透：[Ngrok](https://ngrok.com/)*<br>
+nextcloud 在树莓派上没安装成功过，很迷。<br>
+Kodi的作用是树莓派可以直接连接电视，并播放下载好的视频。<br>
+Git取决于想不想把代码放在自己家，我是觉得Gayhub挺好用的。<br>
 移动等不给公网ip的宽带需要ngrok来实现内网穿透，有公网ip可以直接在路由器中设置DDNS和端口转发。
 
 ### 使用的端口
 
-**（需要在路由器内设置 DDNS 和端口转发）**
-Web服务器：80/443
-Aria2 RPC：6800
+**（需要在路由器内设置 DDNS 和端口转发）**<br>
+Web服务器：80/443<br>
+Aria2 RPC：6800<br>
 ssh：22
 
 ## 安装
@@ -75,7 +75,7 @@ update-hosts
 
 ## 远程控制/访问
 
-在路由器中设置 **DDNS** 和 **端口转发** 可实现公网访问。
+在路由器中设置 **DDNS** 和 **端口转发** 可实现公网访问。<br>
 由于路由器型号不同，在此不予说明，请根据 **路由器说明书** 或者 **Google / Baidu** 进行设置。
 
 ```text
@@ -84,7 +84,7 @@ http(s)://DOMAIN.tpddns.cn:PORT/
 (192.168.1.*)
 ```
 
-*DOMAIN*：DDNS设置的二级域名
+*DOMAIN*：DDNS设置的二级域名<br>
 *PORT*：端口转发设置转发至内部80/443端口的外部端口
 
 ## 挂载 NFS 目录到主机

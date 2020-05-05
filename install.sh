@@ -12,10 +12,8 @@ then
 fi
 
 ## 设置变量
-AriaNG_Version=1.1.4
+AriaNG_Version=1.1.6
 AriaNG_Download="https://github.com/mayswind/AriaNg/releases/download/$AriaNG_Version/AriaNg-$AriaNG_Version.zip"
-nexycloud_Version=18.0.1
-nextcloud_Download="https://download.nextcloud.com/server/releases/nextcloud-$nexycloud_Version.zip"
 
 env() {
     ## 系统更新
@@ -24,7 +22,7 @@ env() {
     apt install -y ssh
     sed -i "s/#TCPKeepAlive yes/TCPKeepAlive yes\nClientAliveInterval 60\nClientAliveCountMax 120/g" /etc/ssh/sshd_config
 	sed -i "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-    systemctl restart ssh.service
+    systemctl restart sshd.service
     ## Nginx
     apt install -y nginx
     ## Python 3
@@ -39,9 +37,9 @@ aria2() {
 
     apt install -y aria2 unzip
     wget $AriaNG_Download
-    mkdir /var/www/html/aria2
-    unzip AriaNg-$AriaNG_Version.zip -d /var/www/html/aria2
-    chown www-data:www-data -R /var/www/html/aria2
+    mkdir /var/www/html/download
+    unzip AriaNg-$AriaNG_Version.zip -d /var/www/html/download
+    chown www-data:www-data -R /var/www/html/download
     rm -rf AriaNg-$AriaNG_Version.zip
 
     ## Aria2 Setting
@@ -97,21 +95,6 @@ samba() {
     systemctl restart smbd.service
     systemctl enable smbd.service
 }
-nextcloud() {
-    # Download
-    wget $nextcloud_Download
-    unzip nextcloud-$nexycloud_Version.zip
-    # Installation dependency
-    apt install -y php-fpm php-common php-curl php-xml php-gd php-json php-mbstring php-zip php-pgsql php-bz2 php-intl php-smbclient php-gmp php-apcu php-imagick
-    apt install -y postgresql
-    pg_ctlcluster 11 main start
-    apt install -y ffmpeg
-    apt install -y libreoffice libreoffice-l10n-zh-cn
-    # Installation Nextcloud
-    cp -r nextcloud /var/www/html
-    chown -R www-data:www-data /var/www/html/nextcloud/
-    sudo -u www-data php /var/www/html/nextcloud/occ maintenance:update:htaccess
-}
 
 install() {
     # Creating RPiNAS user
@@ -122,15 +105,6 @@ install() {
     aria2
     nfs
     samba
-    #nextcloud
-	cp ./update-hosts.sh /usr/bin/update-hosts
-	chmod +x /usr/bin/update-hosts
-	echo "0 0 * * * root /usr/bin/update-hosts" >> /etc/crontab
-	cp ./bt-track.sh /usr/bin/update-bt-track
-	chmod +x /usr/bin/update-bt-track
-	echo "0 0 * * * root /usr/bin/update-bt-track" >> /etc/crontab
-	update-hosts
-	update-bt-trackers
     exit 0
 }
 install
