@@ -11,10 +11,6 @@ then
 	exit 1
 fi
 
-## 设置变量
-AriaNG_Version=1.1.6
-AriaNG_Download="https://github.com/mayswind/AriaNg/releases/download/$AriaNG_Version/AriaNg-$AriaNG_Version.zip"
-
 env() {
     ## 系统更新
     apt update && apt upgrade -y && apt autoremove -y && apt autoclean
@@ -28,46 +24,6 @@ env() {
     ## Python 3
     apt install -y python3 python3-pip
     # pip3 install uwsgi
-}
-
-aria2() {
-    ## Aria2 + AriaNg
-    ## https://github.com/aria2/aria2
-    ## https://github.com/mayswind/AriaNg/
-
-    apt install -y aria2 unzip
-    wget $AriaNG_Download
-    mkdir /var/www/html/download
-    unzip AriaNg-$AriaNG_Version.zip -d /var/www/html/download
-    chown www-data:www-data -R /var/www/html/download
-    rm -rf AriaNg-$AriaNG_Version.zip
-
-    ## Aria2 Setting
-    mkdir /etc/aria2
-    chown $username:$username /etc/aria2
-    cp aria2.conf /etc/aria2/aria2.conf
-    chown $username:$username /etc/aria2/aria2.conf
-    chmod 644 /etc/aria2/aria2.conf
-    touch /etc/aria2/aria2.session
-    chown $username:$username /etc/aria2/aria2.session
-
-    ## Run aria2 when computer starts
-    echo "[Unit]
-Description=Aria2
-After=network.target
-
-[Service]
-User=$username
-Group=$username
-Type=simple
-ExecStart=/usr/bin/aria2c --conf-path=/etc/aria2/aria2.conf
-ExecStop=/bin/kill -s STOP \$MAINPID
-ExecReload=/bin/kill -s HUP \$MAINPID
-
-[Install]
-WantedBy=multi-user.target" > /etc/systemd/system/aria2.service
-    systemctl enable aria2.service
-    systemctl start aria2.service
 }
 
 nfs() {
@@ -102,7 +58,6 @@ install() {
     useradd -d /$username -m -s /usr/sbin/nologin $username
     chmod 777 /$username
     env
-    aria2
     nfs
     samba
     exit 0
